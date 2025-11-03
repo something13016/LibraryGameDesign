@@ -1,14 +1,238 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <link rel="stylesheet" href="style.css">
-        <script src="main.js"></script>
-    </head>
-    <body>
-        <h1 id="BigTitle">
-            Play Library Game
-        </h1>
-        <input type="button" value="Start">
-        <input type="text">
-    </body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reading Adventure Game</title>
+    <style>
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+        }
+
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f0f8ff;
+            overflow: hidden;
+        }
+
+        /* Loading Screen */
+        #loading-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #4a90e2;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            transition: opacity 0.5s ease-out;
+        }
+
+        #loading-title {
+            font-size: 3rem;
+            color: white;
+            margin-bottom: 2rem;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        #loading-bar-container {
+            width: 80%;
+            max-width: 500px;
+            height: 50px;
+            background-color: rgba(255,255,255,0.3);
+            border-radius: 25px;
+            overflow: hidden;
+            border: 3px solid white;
+        }
+
+        #loading-bar {
+            height: 100%;
+            width: 0%;
+            background-color: #ffd700;
+            border-radius: 20px;
+            transition: width 0.2s ease-out; /* Mostly smooth, but not too fast */
+        }
+
+        #loading-text {
+            color: white;
+            font-size: 1.5rem;
+            margin-top: 1rem;
+            transition: opacity 0.1s;
+        }
+
+        /* Main Screen */
+        #main-screen {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            width: 100%;
+            height: 100%;
+            padding: 2rem;
+        }
+
+        #game-title {
+            font-size: 4rem;
+            color: #2c3e50;
+            margin-bottom: 3rem;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+        }
+
+        #play-button {
+            font-size: 2.5rem;
+            padding: 1.5rem 4rem;
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            box-shadow: 0 6px 0 #27ae60;
+            transition: all 0.2s ease;
+            margin-bottom: 2rem;
+            min-width: 300px;
+        }
+
+        #play-button:hover, #play-button:focus {
+            transform: translateY(3px);
+            box-shadow: 0 3px 0 #27ae60;
+            outline: 4px solid #2ecc71;
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            color: #34495e;
+            margin-top: 1rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            #loading-title {
+                font-size: 2rem;
+            }
+
+            #game-title {
+                font-size: 3rem;
+            }
+
+            #play-button {
+                font-size: 2rem;
+                padding: 1rem 2rem;
+                min-width: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen">
+        <h1 id="loading-title">Reading Adventure</h1>
+        <div id="loading-bar-container">
+            <div id="loading-bar"></div>
+        </div>
+        <p id="loading-text">Loading...</p>
+    </div>
+
+    <!-- Main Screen -->
+    <div id="main-screen">
+        <h1 id="game-title">Reading Adventure</h1>
+        <button id="play-button">PLAY GAME</button>
+        <p class="subtitle">Learn and explore with fun stories!</p>
+    </div>
+
+    <script>
+        // Get elements
+        const loadingScreen = document.getElementById('loading-screen');
+        const mainScreen = document.getElementById('main-screen');
+        const loadingBar = document.getElementById('loading-bar');
+        const loadingText = document.getElementById('loading-text');
+        const playButton = document.getElementById('play-button');
+
+        // Loading simulation with occasional lag
+        let progress = 0;
+        const totalDuration = 5000; // 5 seconds total
+        const startTime = Date.now();
+        let isLagging = false;
+
+        function updateLoading() {
+            const elapsed = Date.now() - startTime;
+            
+            if (elapsed >= totalDuration) {
+                // Final push to 100%
+                progress = 100;
+                loadingBar.style.width = `${progress}%`;
+                loadingText.textContent = "Ready!";
+                
+                // Smooth transition with possible tiny delay
+                setTimeout(() => {
+                    loadingScreen.style.opacity = "0";
+                    setTimeout(() => {
+                        loadingScreen.style.display = "none";
+                        mainScreen.style.display = "flex";
+                    }, 500);
+                }, 300 + Math.random() * 200); // Small random delay
+                return;
+            }
+
+            // Most of the time, load smoothly
+            const baseProgress = (elapsed / totalDuration) * 100;
+            const smoothIncrement = baseProgress - progress;
+
+            // 15% chance to hit a lag spike (random pause)
+            const hitLagSpike = !isLagging && Math.random() < 0.15 && progress > 10 && progress < 90;
+            
+            if (hitLagSpike) {
+                isLagging = true;
+                
+                // Random lag duration (800ms - 2s)
+                const lagDuration = 800 + Math.random() * 800;
+                
+                // Pause progress during lag
+                setTimeout(() => {
+                    isLagging = false;
+                    loadingText.textContent = `Loading... ${Math.round(progress)}%`;
+                    // Catch up after lag
+                    progress = baseProgress;
+                    loadingBar.style.width = `${progress}%`;
+                    setTimeout(updateLoading, 50); // Resume normal updates
+                }, lagDuration);
+            } else {
+                // Normal progress (mostly smooth with small variations)
+                progress += smoothIncrement * (0.8 + Math.random() * 0.4); // Small speed variations
+                progress = Math.min(progress, 98); // Stay below 100 until end
+                
+                loadingBar.style.width = `${progress}%`;
+                const percentage = Math.min(Math.round(progress), 100);
+                loadingText.textContent = `Loading... ${percentage}%`;
+
+                // Occasional tiny flicker (5% chance)
+                if (Math.random() < 0.05) {
+                    loadingText.style.opacity = 0.7;
+                    setTimeout(() => loadingText.style.opacity = 1, 80);
+                }
+
+                // Regular update interval with small variations (40-60ms)
+                setTimeout(updateLoading, 40 + Math.random() * 20);
+            }
+        }
+
+        // Start loading
+        updateLoading();
+
+        playButton.addEventListener('click', () => {
+            window.location.href = 'level-select.html';
+        });
+    </script>
+</body>
 </html>

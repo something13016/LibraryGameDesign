@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choose Your Level - Reading Adventure</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+        }
+
+        body {
+            background-color: #f0f8ff;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+
+        .page-subtitle {
+            font-size: 1.2rem;
+            color: #34495e;
+        }
+
+        .levels-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        .level-card {
+            background-color: white;
+            border-radius: 15px;
+            padding: 2rem 1rem;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 4px solid #4a90e2;
+        }
+
+        .level-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+            border-color: #2ecc71;
+        }
+
+        .level-number {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #4a90e2;
+            margin-bottom: 1rem;
+        }
+
+        .level-name {
+            font-size: 1.5rem;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+
+        .level-description {
+            font-size: 1rem;
+            color: #34495e;
+        }
+
+        .back-button {
+            display: block;
+            margin: 3rem auto 0;
+            font-size: 1.2rem;
+            padding: 0.8rem 2rem;
+            background-color: #95a5a6;
+            color: white;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .back-button:hover {
+            background-color: #7f8c8d;
+            transform: translateY(2px);
+        }
+
+        @media (max-width: 768px) {
+            .page-title {
+                font-size: 2rem;
+            }
+            
+            .levels-container {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.5rem;
+            }
+
+            .level-number {
+                font-size: 2.5rem;
+            }
+
+            .level-name {
+                font-size: 1.3rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .levels-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 class="page-title">Choose Your Level</h1>
+        <p class="page-subtitle">Pick a story adventure to begin reading!</p>
+    </div>
+
+    <div class="levels-container">
+        <!-- Level 1 -->
+        <div class="level-card" id="level-1">
+            <div class="level-number">1</div>
+            <h2 class="level-name">Forest Friends</h2>
+            <p class="level-description">Meet friendly animals in the woods</p>
+        </div>
+
+        <!-- Level 2 -->
+        <div class="level-card" id="level-2">
+            <div class="level-number">2</div>
+            <h2 class="level-name">Ocean Explorers</h2>
+            <p class="level-description">Dive into the deep blue sea</p>
+        </div>
+
+        <!-- Level 3 -->
+        <div class="level-card" id="level-3">
+            <div class="level-number">3</div>
+            <h2 class="level-name">Space Journey</h2>
+            <p class="level-description">Visit stars and planets far away</p>
+        </div>
+
+        <!-- Level 4 -->
+        <div class="level-card" id="level-4">
+            <div class="level-number">4</div>
+            <h2 class="level-name">Fairy Tale Land</h2>
+            <p class="level-description">Magical stories with kings and queens</p>
+        </div>
+
+        <!-- Level 5 -->
+        <div class="level-card" id="level-5">
+            <div class="level-number">5</div>
+            <h2 class="level-name">Dinosaur Park</h2>
+            <p class="level-description">Roam with friendly dinosaurs</p>
+        </div>
+
+        <!-- Level 6 -->
+        <div class="level-card" id="level-6">
+            <div class="level-number">6</div>
+            <h2 class="level-name">Robot City</h2>
+            <p class="level-description">Future world with helpful robots</p>
+        </div>
+    </div>
+
+    <button class="back-button">Back to Main Menu</button>
+
+    <script>
+        // Level card click handlers
+        const levelCards = document.querySelectorAll('.level-card');
+        levelCards.forEach(card => {
+            card.addEventListener('click', () => {
+                const levelNumber = card.id.split('-')[1];
+                // In a real game, this would load the actual level
+                alert(`Starting Level ${levelNumber}: ${card.querySelector('.level-name').textContent}`);
+            });
+        });
+
+        // Back button functionality
+        document.querySelector('.back-button').addEventListener('click', () => {
+            window.location.href = 'index.html';
+        });
+    </script>
+</body>
+</html>
