@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Player Movement</title>
+    <style>
+        #gameArea {
+            width: 800px;
+            height: 600px;
+            border: 2px solid #333;
+            position: relative;
+            margin: 20px auto;
+            background-color: #f0f0f0;
+        }
+ 
+        #player {
+            width: 50px;
+            height: 50px;
+            background-color: #4CAF50;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="gameArea">
+        <div id="player"></div>
+        <div id="book"></div>
+    </div>
+ 
+    <script>
+        const player = document.getElementById('player');
+        const gameArea = document.getElementById('gameArea');
+        
+        const keys = {
+          w: false,
+          a: false,
+          s: false,
+          d: false
+        };
+        
+        const speed = 5;
+        
+        //Key press
+        document.addEventListener('keydown', (event) => {
+          const key = event.key.toLowerCase(); 
+          if (keys.hasOwnProperty(key)) {
+            keys[key] = true;
+          }
+        });
+        
+        //Key release
+        document.addEventListener('keyup', (event) => {
+          const key = event.key.toLowerCase();
+          if (keys.hasOwnProperty(key)) {
+            keys[key] = false;
+          }
+        });
+        
+        
+        function updatePosition() {
+          // Get current position (parse from style)
+          let top = parseInt(player.style.top) || 0;
+          let left = parseInt(player.style.left) || 0;
+        
+          if (keys.w) top -= speed;
+          if (keys.s) top += speed;
+          if (keys.a) left -= speed;
+          if (keys.d) left += speed;
+        
+          const gameAreaRect = gameArea.getBoundingClientRect();
+          const playerRect = player.getBoundingClientRect();
+          
+          top = Math.max(0, Math.min(top, gameAreaRect.height - playerRect.height));
+          left = Math.max(0, Math.min(left, gameAreaRect.width - playerRect.width));
+        
+          player.style.top = `${top}px`;
+          player.style.left = `${left}px`;
+        
+          requestAnimationFrame(updatePosition);
+        }
+        
+        // Start the animation loop
+        updatePosition();
+        
+    </script>
+</body>
+</html>
